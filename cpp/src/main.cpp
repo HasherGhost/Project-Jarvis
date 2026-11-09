@@ -1,5 +1,6 @@
 #include "jarvis/tool_registry.hpp"
 
+#include <cmath>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -23,7 +24,7 @@ bool parse_number(const std::string& text, double& value) {
     try {
         std::size_t parsed = 0;
         value = std::stod(text, &parsed);
-        return parsed == text.size();
+        return parsed == text.size() && std::isfinite(value);
     } catch (...) {
         return false;
     }
