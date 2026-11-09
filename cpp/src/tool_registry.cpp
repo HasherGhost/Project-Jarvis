@@ -1,5 +1,6 @@
 #include "jarvis/tool_registry.hpp"
 
+#include <cmath>
 #include <stdexcept>
 #include <utility>
 
@@ -8,9 +9,13 @@ namespace {
 
 bool matches_type(const ToolValue& value, ArgumentType expected) {
     switch (expected) {
-        case ArgumentType::string: return std::holds_alternative<std::string>(value);
-        case ArgumentType::number: return std::holds_alternative<double>(value);
-        case ArgumentType::boolean: return std::holds_alternative<bool>(value);
+        case ArgumentType::string:
+            return std::holds_alternative<std::string>(value);
+        case ArgumentType::number:
+            return std::holds_alternative<double>(value) &&
+                   std::isfinite(std::get<double>(value));
+        case ArgumentType::boolean:
+            return std::holds_alternative<bool>(value);
     }
     return false;
 }
@@ -86,7 +91,7 @@ ToolResult ToolRegistry::validate_arguments(
         }
         if (!matches_type(argument->second, parameter.type)) {
             return ToolResult::error(
-                "Argument '" + parameter.name + "' has the wrong type."
+                "Argument '" + parameter.name + "' has the wrong type or a non-finite number."
             );
         }
     }
