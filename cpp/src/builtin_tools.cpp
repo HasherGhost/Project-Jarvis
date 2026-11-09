@@ -1,8 +1,10 @@
 #include "jarvis/tool_registry.hpp"
 
 #include <chrono>
+#include <cmath>
 #include <ctime>
 #include <iomanip>
+#include <limits>
 #include <sstream>
 #include <stdexcept>
 
@@ -68,7 +70,15 @@ void register_builtin_tools(ToolRegistry& registry) {
         [](const ToolArguments& arguments) {
             const auto a = std::get<double>(arguments.at("a"));
             const auto b = std::get<double>(arguments.at("b"));
-            return ToolResult::ok(std::to_string(a + b));
+            const auto sum = a + b;
+
+            if (!std::isfinite(sum)) {
+                return ToolResult::error("The result is outside the supported numeric range.");
+            }
+
+            std::ostringstream output;
+            output << std::setprecision(std::numeric_limits<double>::max_digits10) << sum;
+            return ToolResult::ok(output.str());
         }
     });
 }
