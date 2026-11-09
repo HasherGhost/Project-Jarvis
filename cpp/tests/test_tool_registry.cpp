@@ -1,6 +1,7 @@
 #include "jarvis/tool_registry.hpp"
 
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 #include <string>
 
@@ -27,12 +28,19 @@ int main() {
         require(echo.success && echo.output == "hello", "echo should return its message");
 
         const auto sum = registry.execute("add_numbers", {{"a", 3.0}, {"b", 5.0}});
-        require(sum.success && sum.output == "8.000000", "add_numbers should add values");
+        require(sum.success && sum.output == "8", "add_numbers should format whole numbers cleanly");
 
         require(!registry.execute("echo", {}).success, "missing arguments should fail");
         require(
             !registry.execute("echo", {{"message", 42.0}}).success,
             "incorrect argument types should fail"
+        );
+        require(
+            !registry.execute("add_numbers", {
+                {"a", std::numeric_limits<double>::infinity()},
+                {"b", 1.0}
+            }).success,
+            "non-finite numeric arguments should fail"
         );
         require(
             !registry.execute("get_time", {{"unexpected", true}}).success,
