@@ -1,6 +1,34 @@
+# Secrets
 .env
-*.db
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+.venv/
+venv/
+
+# Native build output
+build/
+cmake-build-*/
+out/
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.exe
+
+# Runtime data
+*.db
+logs/*
+!logs/.gitkeep
+
+# IDE / OS
+.vscode/
+.idea/
 .DS_Store
+Thumbs.db
+
+# User data
 Obsidian_vault/

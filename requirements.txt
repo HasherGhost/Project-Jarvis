@@ -1,1 +1,2 @@
-This project requires: flask, openai, etc.
+google-genai
+python-dotenv
